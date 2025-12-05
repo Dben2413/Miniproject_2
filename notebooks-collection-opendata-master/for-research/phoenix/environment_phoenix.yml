@@ -1,0 +1,28 @@
+name: phoenix
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - ca-certificates
+  - libcxx
+  - libffi
+  - ncurses
+  - openssl
+  - readline
+  - setuptools==65.5.1
+  - sqlite
+  - tk
+  - wheel
+  - xz
+  - zlib
+  - pip:
+      - awkward==1.10.5
+      - awkward0==0.15.5
+      - coffea==0.7.21
+      - numpy==1.23.5
+      - uproot==4.3.7
+      - uproot3==3.14.4
+      - uproot3-methods==0.10.1
+      - zstandard==0.22.0
