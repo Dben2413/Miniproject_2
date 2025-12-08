@@ -6,33 +6,37 @@ services:
       - "5672:5672"
     networks:
       - rabbit
+    environment:
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbit max_message_size 209715200"
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
       timeout: 30s
       retries: 3
-  rmq-consumer:
-    build: rmq-consumer/.
+  data_loader:
+    build: data_loader./
+    depends_on:
+      - plotter
     networks:
       - rabbit
-    deploy:
-      mode: replicated
-      replicas: 3
+
+  data_analyzer:
+    build: data_analyzer/.
+    # container_name: data_analyzer
     depends_on:
       rabbitmq:
         condition: service_healthy
-        restart: true
-  rmq-producer:
-    build: rmq-producer/.
     networks:
       - rabbit
-    deploy:
-      mode: replicated
-      replicas: 2
+  plotter:
+    build: plotter/.
+    container_name: plotter
     depends_on:
-      rabbitmq:
-        condition: service_healthy
-        restart: true
+      - data_analyzer
+    networks:
+      - rabbit
+    volumes:
+      - ./plot:/output
 
 networks:
   rabbit:

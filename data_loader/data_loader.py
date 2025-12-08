@@ -19,9 +19,7 @@ import pika
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 QUEUE_NAME = os.getenv('QUEUE_NAME', 'filename')
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBITMQ_HOST)
-)
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
 channel = connection.channel()
 
 channel.queue_declare(queue=QUEUE_NAME, durable=True)
