@@ -21,4 +21,4 @@ RUN pip install aiohttp
 # RUN pip install json
 
 # the command to run our program
-CMD [ "python", "./data_analyzer.py"]
+CMD [ "python", "-u", "./data_analyzer.py"]

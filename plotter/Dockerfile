@@ -14,4 +14,4 @@ RUN pip install numpy
 RUN pip install atlasopenmagic
 
 # the command to run our program
-CMD [ "python", "./plotter.py"]
+CMD [ "python", "-u", "./plotter.py"]

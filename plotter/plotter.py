@@ -16,7 +16,7 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOS
 channel = connection.channel()
 channel.queue_declare(queue=OUTPUT_QUEUE, durable=True)
 last_message_time = time.time()
-IDLE_TIMEOUT = 2
+TIMEOUT = 40
 all_sample_data = {}
 all_data = {}
 frames = {}
@@ -36,8 +36,8 @@ for method, properties, body in channel.consume(OUTPUT_QUEUE, inactivity_timeout
     if method is not None:
         callback(channel, method, properties, body)
     else:
-        if time.time() - last_message_time > IDLE_TIMEOUT:
-            print(f"⚠️  超过 {IDLE_TIMEOUT} 秒未收到新消息，视为收集完成。")
+        if time.time() - last_message_time > TIMEOUT:
+            print(f"No communication for {TIMEOUT} second")
             break
         else:
             continue
@@ -51,8 +51,9 @@ for filename in all_sample_data:
         if filename not in frames:
             frames[filename] = []
         frames[filename].append(ak.concatenate(i))
+for filename in all_sample_data:
     if filename not in all_data:
-        all_data[filename] =[]
+        all_data[filename] = []
     all_data[filename] = ak.concatenate(frames[filename])
 
 
@@ -145,7 +146,6 @@ mc_x_err = np.sqrt(np.histogram(np.hstack(mc_x), bins=bin_edges, weights=np.hsta
 signal_heights = main_axes.hist(signal_x, bins=bin_edges, bottom=mc_x_tot,
                 weights=signal_weights, color=signal_color,
                 label=r'Signal ($m_H$ = 125 GeV)')
-
 # plot the statistical uncertainty
 main_axes.bar(bin_centres, # x
                 2*mc_x_err, # heights
@@ -209,7 +209,24 @@ plt.text(0.1, # x
 
 # draw the legend
 my_legend = main_axes.legend( frameon=False, fontsize=16 ) # no box around the legend
-plt.savefig('my_plot.png', dpi=300, bbox_inches='tight')
+
+
+
+
+
+
+
+output_dir = "/output" #directory within the container 
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir, exist_ok=True)
+
+output_filename = f"higgs_mass_plot_{time.strftime('%Y%m%d_%H%M%S')}.png"
+output_path = os.path.join(output_dir, output_filename)
+
+
+
+
+plt.savefig(output_path, dpi=300, bbox_inches='tight')
 plt.show()
 # channel.basic_consume(queue=OUTPUT_QUEUE,
 #     auto_ack=True,
