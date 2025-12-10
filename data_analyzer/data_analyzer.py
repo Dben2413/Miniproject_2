@@ -84,19 +84,6 @@ INPUT_QUEUE = os.getenv('INPUT_QUEUE', 'filename')
 OUTPUT_QUEUE = os.getenv('OUTPUT_QUEUE', 'result_array')
 
 
-# def connect_to_rabbitmq(host,max_retries=30, retry_interval=5):
-#     for i in range(max_retries):
-#         try:
-#             print(f'Connecting to RabbitMQ ({i+1}/{max_retries})...')
-#             connection = pika.BlockingConnection(pika.ConnectionParameters(host=host))
-#             print('Connection established')
-#             return connection
-#         except pika.exceptions.AMQPConnectionError:
-#             if i < max_retries - 1:
-#                 time.sleep(retry_interval)
-#             else:
-#                 raise 
-#     return None
 
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
