@@ -15,6 +15,6 @@ docker-compose up --build --scale data_analyzer=3
 ## Closing the application
 For now, manually stop container and delete the local image before next run.
 
-![](Image/screenshots/edit.png)
+![](Image/UI_container.png)
 ![](Image/image.png)
 
